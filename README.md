@@ -12,9 +12,7 @@ A web-based carpooling app built for UCSD students as part of the **Programming 
 
 ## 🚀 Deploy Link
 
-👉 **[Try the live site here](https://<username>.github.io/<repository-name>/)**
-
-_(Replace with your actual GitHub Pages URL after deploying)_
+👉 **[Try the live site here](https://ttai2023.github.io/carpool-webapp-example/)**
 
 ## 📖 Description
 
