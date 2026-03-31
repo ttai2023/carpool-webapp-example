@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Triton Carpool — UCSD Ride Sharing</title>
+    <title>Triton Carpool — API Demo</title>
     <link rel="stylesheet" href="styles.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" />
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔱</text></svg>" type="image/svg+xml" />
@@ -14,38 +14,23 @@
     <nav class="navbar">
         <ul>
             <li class="nav-brand"><a href="#top">🔱 Triton Carpool</a></li>
-            <li><a href="#about">About</a></li>
+            <li><a href="#weather">Ride Weather</a></li>
             <li><a href="#rides">Find Rides</a></li>
             <li><a href="#offer">Offer a Ride</a></li>
-            <li><a href="#my-rides">My Rides</a></li>
             <li><a href="#connect">Connect</a></li>
             <li><button id="theme-button">Dark Mode 🌙</button></li>
         </ul>
     </nav>
 
-    <!-- CONFETTI CANVAS -->
-    <canvas id="confetti-canvas"></canvas>
-
-    <!-- USER ROLE BANNER — select your role for pricing -->
-    <div class="role-banner" id="role-banner">
-        <span>👋 Welcome, Triton! Select your role for pricing:</span>
-        <select id="user-role">
-            <option value="student">Student (50% off)</option>
-            <option value="teacher">Teacher (50% off)</option>
-            <option value="parent">Parent (Full price)</option>
-            <option value="alumni">Alumni (Full price)</option>
-        </select>
-    </div>
-
     <!-- HEADER -->
     <header class="header-container" id="top">
         <div class="header-content">
-            <div class="header-badge">PROGRAMMING FOR TRITONS</div>
+            <div class="header-badge">PROGRAMMING FOR TRITONS — API DEMO</div>
             <h1 class="header-item">Triton Carpool</h1>
             <h3 class="header-item">Share rides. Save money. Reduce emissions. Go Tritons! 🔱</h3>
             <div class="header-buttons">
-                <button class="btn btn-gold" type="button" onclick="document.getElementById('rides').scrollIntoView({behavior:'smooth'})">Find a Ride</button>
-                <button class="btn btn-outline" type="button" onclick="document.getElementById('offer').scrollIntoView({behavior:'smooth'})">Offer a Ride</button>
+                <button class="btn btn-gold" type="button" onclick="document.getElementById('weather').scrollIntoView({behavior:'smooth'})">Check Ride Weather</button>
+                <button class="btn btn-outline" type="button" onclick="document.getElementById('rides').scrollIntoView({behavior:'smooth'})">Find a Ride</button>
             </div>
         </div>
         <div class="header-visual">
@@ -53,200 +38,104 @@
         </div>
     </header>
 
-    <!-- ABOUT -->
-    <section id="about" class="section revealable">
-        <h2>About Triton Carpool</h2>
-        <div class="about-grid">
-            <div class="about-card">
-                <div class="about-icon">🚗</div>
-                <h4>Share the Ride</h4>
-                <p>Connect with fellow UCSD students heading the same direction. Split costs and make friends along the way.</p>
-            </div>
-            <div class="about-card">
-                <div class="about-icon">💰</div>
-                <h4>Save Money</h4>
-                <p>Students and teachers pay half price! Carpooling cuts your commute costs significantly.</p>
-            </div>
-            <div class="about-card">
-                <div class="about-icon">🌍</div>
-                <h4>Go Green</h4>
-                <p>Fewer cars on Gilman Drive means less traffic and lower carbon emissions. Electric vehicles get priority!</p>
-            </div>
-            <div class="about-card">
-                <div class="about-icon">🛡️</div>
-                <h4>UCSD Only</h4>
-                <p>Verified Triton community. Only UCSD students, faculty, parents, and alumni can post and book rides.</p>
-            </div>
-        </div>
-    </section>
+    <!-- WEATHER API SECTION -->
+    <section id="weather" class="section revealable">
+        <h2>🌤️ Ride Weather Check</h2>
+        <h3>Check the forecast before you head out — powered by a live weather API</h3>
 
-    <!-- STATS -->
-    <section class="section stats-bar revealable">
-        <div class="stat">
-            <span class="stat-number" id="stat-rides">0</span>
-            <span class="stat-label">Rides Shared</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number" id="stat-riders">0</span>
-            <span class="stat-label">Tritons Connected</span>
-        </div>
-        <div class="stat">
-            <span class="stat-number" id="stat-co2">0</span>
-            <span class="stat-label">lbs CO₂ Saved</span>
+        <div class="weather-box">
+            <div class="weather-input-row">
+                <input type="text" id="city-input" placeholder="Enter a city (e.g. San Diego, Los Angeles, La Jolla...)" value="San Diego" />
+                <button class="btn btn-gold" id="weather-btn" type="button">Get Weather ☀️</button>
+            </div>
+
+            <div id="weather-result" class="weather-result">
+                <p class="weather-placeholder">Enter a city and click "Get Weather" to see the forecast!</p>
+            </div>
+
+            <!-- Expandable raw JSON for demo purposes -->
+            <details class="raw-json-toggle">
+                <summary>🔍 View raw API response (JSON)</summary>
+                <pre id="raw-json" class="code-block raw-json">Fetch weather first to see the raw API response here.</pre>
+            </details>
         </div>
     </section>
 
     <!-- FIND RIDES -->
     <section id="rides" class="section revealable">
         <h2>Available Rides</h2>
-        <h3>Browse and book rides offered by fellow Tritons — only open rides are shown</h3>
+        <h3>Browse rides offered by fellow Tritons</h3>
 
         <div class="filter-bar">
-            <input type="text" id="search-input" placeholder="Search by destination, model, or driver..." />
+            <input type="text" id="search-input" placeholder="Search by destination or driver..." />
             <select id="filter-type">
-                <option value="all">All Vehicle Types</option>
+                <option value="all">All Types</option>
                 <option value="car">Car</option>
-                <option value="electric">Electric Car</option>
+                <option value="electric">Electric</option>
                 <option value="bicycle">Bicycle</option>
-                <option value="segway">Segway</option>
-                <option value="helicopter">Helicopter</option>
             </select>
         </div>
 
         <div class="rides-grid" id="rides-grid"></div>
-        <p class="empty-state" id="no-rides" style="display:none;">No open rides available. Be the first to offer one!</p>
+        <p class="empty-state" id="no-rides" style="display:none;">No rides available yet. Offer one below!</p>
     </section>
 
-    <!-- OFFER A RIDE / ADD VEHICLE -->
+    <!-- OFFER A RIDE -->
     <section id="offer" class="section revealable">
         <h2>Offer a Ride</h2>
-        <h3>Add your vehicle to the system — other Tritons can book seats!</h3>
+        <h3>Post your ride so other Tritons can book a seat</h3>
 
         <div class="form-container">
-            <form id="ride-form" title="offer-ride-form" novalidate>
+            <form id="ride-form" novalidate>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="driver-name">Owner Name</label>
+                        <label for="driver-name">Your Name</label>
                         <input type="text" id="driver-name" name="driver-name" placeholder="e.g. King Triton" required />
                         <span class="field-error" id="err-driver-name"></span>
                     </div>
                     <div class="form-group">
-                        <label for="vehicle-model">Vehicle Model</label>
+                        <label for="vehicle-model">Vehicle</label>
                         <input type="text" id="vehicle-model" name="vehicle-model" placeholder="e.g. Tesla Model 3" required />
                         <span class="field-error" id="err-vehicle-model"></span>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="vehicle-type">Vehicle Type</label>
-                        <select id="vehicle-type" name="vehicle-type" required onchange="toggleTypeFields()">
+                        <label for="vehicle-type">Type</label>
+                        <select id="vehicle-type" name="vehicle-type" required>
                             <option value="">Select...</option>
                             <option value="car">🚗 Car</option>
-                            <option value="electric">⚡ Electric Car</option>
+                            <option value="electric">⚡ Electric</option>
                             <option value="bicycle">🚲 Bicycle</option>
-                            <option value="segway">🛴 Segway</option>
-                            <option value="helicopter">🚁 Helicopter</option>
                         </select>
                         <span class="field-error" id="err-vehicle-type"></span>
                     </div>
                     <div class="form-group">
-                        <label for="seats">Capacity (seats)</label>
-                        <input type="number" id="seats" name="seats" min="1" max="20" placeholder="4" required />
+                        <label for="seats">Seats</label>
+                        <input type="number" id="seats" name="seats" min="1" max="10" placeholder="4" required />
                         <span class="field-error" id="err-seats"></span>
                     </div>
                     <div class="form-group">
-                        <label for="price">Base Price ($)</label>
+                        <label for="price">Price ($)</label>
                         <input type="number" id="price" name="price" min="0" step="0.50" placeholder="10.00" required />
                         <span class="field-error" id="err-price"></span>
                     </div>
                 </div>
-
-                <!-- Type-specific fields (show/hide based on vehicle type) -->
-                <div class="form-row type-fields" id="fields-car" style="display:none;">
-                    <div class="form-group">
-                        <label for="car-range">Range (miles)</label>
-                        <input type="number" id="car-range" name="car-range" placeholder="300" />
-                    </div>
-                </div>
-                <div class="form-row type-fields" id="fields-electric" style="display:none;">
-                    <div class="form-group">
-                        <label for="electric-range">Range (miles)</label>
-                        <input type="number" id="electric-range" name="electric-range" placeholder="250" />
-                    </div>
-                </div>
-                <div class="form-row type-fields" id="fields-bicycle" style="display:none;">
-                    <div class="form-group">
-                        <label for="bicycle-type">Bicycle Type</label>
-                        <input type="text" id="bicycle-type" name="bicycle-type" placeholder="e.g. Road, Mountain" />
-                    </div>
-                    <div class="form-group">
-                        <label for="bicycle-weight">Weight (lbs)</label>
-                        <input type="number" id="bicycle-weight" name="bicycle-weight" placeholder="25" />
-                    </div>
-                </div>
-                <div class="form-row type-fields" id="fields-segway" style="display:none;">
-                    <div class="form-group">
-                        <label for="segway-range">Range (miles)</label>
-                        <input type="number" id="segway-range" name="segway-range" placeholder="15" />
-                    </div>
-                    <div class="form-group">
-                        <label for="segway-weight-cap">Weight Capacity (lbs)</label>
-                        <input type="number" id="segway-weight-cap" name="segway-weight-cap" placeholder="220" />
-                    </div>
-                </div>
-                <div class="form-row type-fields" id="fields-helicopter" style="display:none;">
-                    <div class="form-group">
-                        <label for="heli-altitude">Max Altitude (ft)</label>
-                        <input type="number" id="heli-altitude" name="heli-altitude" placeholder="10000" />
-                    </div>
-                    <div class="form-group">
-                        <label for="heli-speed">Max Airspeed (mph)</label>
-                        <input type="number" id="heli-speed" name="heli-speed" placeholder="150" />
-                    </div>
-                </div>
-
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="departure">Departure Location</label>
+                        <label for="departure">From</label>
                         <input type="text" id="departure" name="departure" placeholder="e.g. Geisel Library" required />
                         <span class="field-error" id="err-departure"></span>
                     </div>
                     <div class="form-group">
-                        <label for="destination">Destination</label>
+                        <label for="destination">To</label>
                         <input type="text" id="destination" name="destination" placeholder="e.g. Old Town San Diego" required />
                         <span class="field-error" id="err-destination"></span>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="ride-date">Date</label>
-                        <input type="date" id="ride-date" name="ride-date" required />
-                        <span class="field-error" id="err-ride-date"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="ride-time">Time</label>
-                        <input type="time" id="ride-time" name="ride-time" required />
-                        <span class="field-error" id="err-ride-time"></span>
-                    </div>
-                </div>
-
-                <button class="btn btn-gold btn-full" id="offer-button" type="submit">Add Vehicle & Post Ride 🔱</button>
+                <button class="btn btn-gold btn-full" id="offer-button" type="submit">Post Ride 🔱</button>
             </form>
         </div>
-    </section>
-
-    <!-- MY RIDES -->
-    <section id="my-rides" class="section revealable">
-        <h2>My Rides</h2>
-        <h3>Track rides you've booked and vehicles you own</h3>
-        <div class="my-rides-tabs">
-            <button class="tab-btn active" id="tab-booked" onclick="switchTab('booked')">🎟️ Booked</button>
-            <button class="tab-btn" id="tab-offered" onclick="switchTab('offered')">🚗 My Vehicles</button>
-        </div>
-        <div class="rides-grid" id="my-rides-grid"></div>
-        <p class="empty-state" id="no-my-rides" style="display:none;">Nothing here yet!</p>
     </section>
 
     <!-- CONNECT -->
@@ -254,7 +143,7 @@
         <h2>Connect with Us</h2>
         <div class="connect-container">
             <div class="connect-para">
-                <p>Join the Triton Carpool community! Sign up to get notified about new rides, campus events, and sustainability tips from fellow UCSD students.</p>
+                <p>Join the Triton Carpool community! Sign up to get notified about new rides and sustainability tips.</p>
             </div>
             <div class="connect-participants" id="connect-participants">
                 <p>🔱 Alex from Sixth College has connected.</p>
@@ -263,8 +152,9 @@
             </div>
         </div>
         <p id="connect-count">⭐ 3 Tritons have joined the community!</p>
+
         <div class="form-container">
-            <form id="connect-form" title="connect-form" novalidate>
+            <form id="connect-form" novalidate>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="connect-name">Name</label>
@@ -274,7 +164,7 @@
                     <div class="form-group">
                         <label for="connect-college">College</label>
                         <select id="connect-college" name="college" required>
-                            <option value="">Select your college...</option>
+                            <option value="">Select...</option>
                             <option value="Revelle">Revelle</option>
                             <option value="Muir">Muir</option>
                             <option value="Marshall">Marshall</option>
@@ -297,48 +187,11 @@
         </div>
     </section>
 
-    <!-- CAMPUS MAP -->
-    <section id="campus-map" class="section revealable">
-        <h2>Campus Map</h2>
-        <h3>Popular pickup & drop-off spots around UCSD</h3>
-        <div class="map-container">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13412.892768843498!2d-117.24168254999999!3d32.8800604!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dc06c4414caf4f%3A0x1b2414b5bfab2523!2sUniversity%20of%20California%20San%20Diego!5e0!3m2!1sen!2sus!4v1711648000000!5m2!1sen!2sus" width="100%" height="450" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="UCSD Campus Map"></iframe>
-        </div>
-        <div class="map-spots">
-            <div class="spot-tag">📍 Geisel Library</div>
-            <div class="spot-tag">📍 Price Center</div>
-            <div class="spot-tag">📍 Gilman Transit Center</div>
-            <div class="spot-tag">📍 Sixth College</div>
-            <div class="spot-tag">📍 Warren College</div>
-            <div class="spot-tag">📍 Revelle Plaza</div>
-            <div class="spot-tag">📍 RIMAC Arena</div>
-            <div class="spot-tag">📍 UTC Mall</div>
-        </div>
-    </section>
-
-    <!-- RESOURCES -->
-    <section class="section revealable" id="resources">
-        <h2>Additional Resources</h2>
-        <h3>More ways to get around and get involved at UCSD</h3>
-        <div class="links-grid">
-            <a href="https://transportation.ucsd.edu/" target="_blank" class="link-card">
-                <article><h4>🚌 UCSD Transportation</h4><p>Official campus transit info, shuttles, parking, and bike resources.</p></article>
-            </a>
-            <a href="https://sustainability.ucsd.edu/" target="_blank" class="link-card">
-                <article><h4>🌱 UCSD Sustainability</h4><p>Campus sustainability initiatives and how you can contribute.</p></article>
-            </a>
-            <a href="https://studentorg.ucsd.edu/" target="_blank" class="link-card">
-                <article><h4>🎓 Student Orgs</h4><p>Find clubs and organizations to join at UCSD.</p></article>
-            </a>
-        </div>
-    </section>
-
     <!-- FOOTER -->
     <footer class="footer">
         <div class="footer-content">
             <p class="footer-brand">🔱 Triton Carpool</p>
-            <p>A Programming for Tritons project — improving student life through code.</p>
-            <p>Originally a mobile app (IB CS 2022) — now rebuilt for the web.</p>
+            <p>A Programming for Tritons project — API Demo</p>
             <p>Made with 💛 at UC San Diego &hearts;</p>
         </div>
     </footer>
