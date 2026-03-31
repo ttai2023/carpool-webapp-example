@@ -79,8 +79,8 @@ This project is designed as an example for the **Programming for Tritons** web d
 
 ## 👥 Contact & Credits
 
-- **Instructor**: Terri Tai
-- **Course**: Programming for Tritons — Web Development
+- **Instructors**: Minjoo O, Terri Tai, Kaitlyn Nguy
+- **Course**: WIC Spring Project Teams: Programming for Tritons
 - **University**: UC San Diego
 
 ---
